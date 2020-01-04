@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="jp"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="jp" /><updated>2020-01-04T20:47:35+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">kemonomichi.tech</title><subtitle>舗装の予定はございません
+</subtitle><author><name>murao</name></author><entry><title type="html">numpy配列を相対参照できるnumpy.viewを賢く使おう</title><link href="http://localhost:4000/2019/02/13/use-numpy-view.html" rel="alternate" type="text/html" title="numpy配列を相対参照できるnumpy.viewを賢く使おう" /><published>2019-02-13T23:29:54+09:00</published><updated>2019-02-13T23:29:54+09:00</updated><id>http://localhost:4000/2019/02/13/use-numpy-view</id><content type="html" xml:base="http://localhost:4000/2019/02/13/use-numpy-view.html">&lt;p&gt;今回はnumpy配列の値を相対参照により書き換える方法をご説明していきたいと思います。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;同じ添字の値を繰り返し代入するならnumpyviewを使おう&quot;&gt;同じ添字の値を繰り返し代入するならnumpy.viewを使おう&lt;/h2&gt;
+
+&lt;p&gt;numpy配列に対してviewメソッドを利用すると、その配列を相対的に操作可能なオブジェクトを作成することができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;適当な多次元配列を生成&quot;&gt;適当な多次元配列を生成&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# ゼロで初期化された 3*3*3 の配列を作成
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base_array&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# [[[ 0.  0.  0.]
+#   [ 0.  0.  0.]
+#   [ 0.  0.  0.]]
+#
+#  [[ 0.  0.  0.]
+#   [ 0.  0.  0.]
+#   [ 0.  0.  0.]]
+#
+#  [[ 0.  0.  0.]
+#   [ 0.  0.  0.]
+#   [ 0.  0.  0.]]]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;まずは、適当な多次元配列を生成します。
+今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;numpy.zeros&lt;/code&gt;メソッドで値がすべて0の三次元配列（三次元零行列）を生成しています。&lt;/p&gt;
+
+&lt;h3 id=&quot;viewメソッドで相対参照配列を生成し値を書き換える&quot;&gt;viewメソッドで、相対参照配列を生成し、値を書き換える&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# base_array から特定の範囲を参照する配列である view_array を作成
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# 相対参照している部分に 1 を代入する
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# viewを表示
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# [[[ 1.]
+#   [ 1.]]
+#
+#  [[ 1.]
+#   [ 1.]]]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;numpy.viewにより、特定の範囲のみを切り取った&lt;code class=&quot;highlighter-rouge&quot;&gt;viwe_array&lt;/code&gt;を作成します。今回は、わざと複雑なスライス構文を利用しています。ここでは&lt;code class=&quot;highlighter-rouge&quot;&gt;base_array&lt;/code&gt;に対する相対参照配列viewに対して1を代入しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;view_array&lt;/code&gt;をprintしてみると、2×2×1の配列が表示されました。一方、viewの元となった&lt;code class=&quot;highlighter-rouge&quot;&gt;base_array&lt;/code&gt;はというと…&lt;/p&gt;
+
+&lt;h3 id=&quot;元のオブジェクトを確認する&quot;&gt;元のオブジェクトを確認する&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# 元となっている 3*3*3 行列を表示
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# [[[ 0.  0.  0.]
+#   [ 0.  0.  0.]
+#   [ 0.  0.  0.]]
+#
+#  [[ 0.  0.  0.]
+#   [ 1.  0.  0.]
+#   [ 1.  0.  0.]]
+#
+#  [[ 0.  0.  0.]
+#   [ 1.  0.  0.]
+#   [ 1.  0.  0.]]]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;viewの範囲として指定した部分のみが1になっていますね。&lt;/p&gt;
+
+&lt;p&gt;記述が冗長になりやすい高次元&lt;code class=&quot;highlighter-rouge&quot;&gt;numpy&lt;/code&gt;行列ですが、viewメソッドを利用し相対参照により値を操作することで、処理の対象を明確にし、読みやすくミスの少ないコーディングを行うことができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;numpyviewを利用する上での注意点&quot;&gt;numpy.viewを利用する上での注意点&lt;/h3&gt;
+
+&lt;p&gt;viewメソッドを利用するときに注意点があります。
+それは、値を代入するときの添字は必ず&lt;code class=&quot;highlighter-rouge&quot;&gt;[:]&lt;/code&gt;のようなセミコロンを含むスライスを使うという点です。&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__class__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# ndarray
+&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# [[[ 1.]
+#   [ 1.]]
+#
+#  [[ 1.]
+#   [ 1.]]]
+&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__class__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# int
+&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;# 1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;view_array&lt;/code&gt;にそのまま1を代入すると、&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;クラスの1が代入されているのが分かると思います。相対参照の配列に値を代入するときは必ず&lt;code class=&quot;highlighter-rouge&quot;&gt;[:]&lt;/code&gt;を利用しましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回はviewメソッドの使い方について説明してみましたが、いかがだったでしょうか。私自身&lt;code class=&quot;highlighter-rouge&quot;&gt;NumPy&lt;/code&gt;でニューラルネットワークの実装をいじくるとき、大変お世話になっているメソッドでございます。&lt;/p&gt;
+
+&lt;p&gt;機械学習等、可視化することの難しい高次元に対しては非常に有用なテクニックだと思いますので、みなさんもぜひ使ってみてください。&lt;/p&gt;</content><author><name>murao</name></author><category term="Python" /><category term="NumPy" /><summary type="html">今回はnumpy配列の値を相対参照により書き換える方法をご説明していきたいと思います。</summary></entry><entry><title type="html">javascript(jquery)を書く場所とLaravelMixの使い方についての備忘録</title><link href="http://localhost:4000/2019/01/24/where_will_js_be_placed.html" rel="alternate" type="text/html" title="javascript(jquery)を書く場所とLaravelMixの使い方についての備忘録" /><published>2019-01-24T00:00:00+09:00</published><updated>2019-01-24T00:00:00+09:00</updated><id>http://localhost:4000/2019/01/24/where_will_js_be_placed</id><content type="html" xml:base="http://localhost:4000/2019/01/24/where_will_js_be_placed.html">&lt;p&gt;LaravelでjQueryの関数を呼び出そうとしたとき、どこにコードを書いてどう呼び出せば良いのか分からなかったので、備忘録として記事を書いておこうと思います。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p class=&quot;warning&quot;&gt;本記事に書かれている手順が必ずしも正しいというわけではありません。また、バージョンの差異などにより本記事の内容が有効でない場合がございます。ご了承ください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://readouble.com/laravel/5.7/ja/structure.html&quot;&gt;ディレクトリ構造 5.7 Laravel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ディレクトリの配置場所なんかは、Laravelの設計思想上「&lt;code class=&quot;highlighter-rouge&quot;&gt;composer&lt;/code&gt;が動いてたらどこでもOK!」というふわっとしたルールになっています。そのため、本記事に書かれている配置が気に食わないと感じる方もいると思います。その場合は自分のお好きなディレクトリを選択してください。&lt;/p&gt;
+
+&lt;p&gt;本記事の手順を実行するには、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;が必須となりますので、予めご自身の開発環境でこれらが利用できるように準備しておいてください。&lt;/p&gt;
+
+&lt;p&gt;今回の手順は純粋な&lt;code class=&quot;highlighter-rouge&quot;&gt;javascript&lt;/code&gt;(&lt;code class=&quot;highlighter-rouge&quot;&gt;vanilla.js&lt;/code&gt;)でも、&lt;code class=&quot;highlighter-rouge&quot;&gt;jQuery&lt;/code&gt;でも大体同じ手順で動作させらます。&lt;/p&gt;
+
+&lt;h2 id=&quot;開発環境&quot;&gt;開発環境&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;OS Windows 7&lt;/li&gt;
+  &lt;li&gt;Apache 2.4.35&lt;/li&gt;
+  &lt;li&gt;MySQL 15.1&lt;/li&gt;
+  &lt;li&gt;php 7.2.11&lt;/li&gt;
+  &lt;li&gt;Laravel 5.7&lt;/li&gt;
+  &lt;li&gt;node.js 10.15.0&lt;/li&gt;
+  &lt;li&gt;npm 6.4.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;手順&quot;&gt;手順&lt;/h2&gt;
+
+&lt;h3 id=&quot;ソースコードの配置場所を決める&quot;&gt;ソースコードの配置場所を決める&lt;/h3&gt;
+
+&lt;p&gt;書いたjsコードは、&lt;code class=&quot;highlighter-rouge&quot;&gt;resources/js&lt;/code&gt;配下に適当なフォルダを作って、その中に配置していきます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://laravel.com/docs/5.7/structure#the-resources-directory&quot;&gt;Directory Structure – Laravel – The PHP Framework For Web Artisans&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;初めは&lt;code class=&quot;highlighter-rouge&quot;&gt;public/js&lt;/code&gt;内に配置していましたが、英語版公式のドキュメントを見ると「コンパイル前の生の&lt;code class=&quot;highlighter-rouge&quot;&gt;javascript&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;LESS&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;SASS&lt;/code&gt;なんかは&lt;code class=&quot;highlighter-rouge&quot;&gt;resources&lt;/code&gt;に入れてね！」って書いてあるので、それに従いたいと思います。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resources
+ ├─/js
+ │  │
+ │  ├─/asset
+ │  │  ├─test_jquery.js
+ │  │  └─test_vanilla.js
+ │  │
+ │  ├─/components
+ │  │  └─ExampleComponent.vue
+ │  ├─bootstrap.js
+ ~  └─app.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;resources&lt;/code&gt;フォルダ内に新しく&lt;code class=&quot;highlighter-rouge&quot;&gt;asset&lt;/code&gt;フォルダを作成し、その中にそれぞれのフォーマットのソースコードを配置します。（これらの異なったフォーマットの&lt;code class=&quot;highlighter-rouge&quot;&gt;.js&lt;/code&gt;コードをひとつのプロジェクト内で書く人はあまりいないかもしれませんが…）&lt;/p&gt;
+
+&lt;p&gt;今回は、例として&lt;code class=&quot;highlighter-rouge&quot;&gt;test_jquery.js&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;test_vanilla.js&lt;/code&gt;を作成して説明を進めていきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;javascriptのソースを書く&quot;&gt;javascriptのソースを書く&lt;/h3&gt;
+
+&lt;p&gt;今回は説明用に、以下のような処理を記述しました。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// test_vanilla.js&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;test_vanilla&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Hello Vanilla Javascript!!&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// test_jquery.js&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;#btn&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Hello jQuery!!&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;書いたソースをwebpackmixjsに登録する&quot;&gt;書いたソースを&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack.mix.js&lt;/code&gt;に登録する&lt;/h3&gt;
+
+&lt;p&gt;ここからは、&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;Laravel Mix&lt;/code&gt;の設定についてです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Laravel Mix&lt;/code&gt;についての詳細な説明は行うと長ったらしくなるので、とりあえずjsコードを動かしてみるところまでを目指します。
+「詳しい説明を読みたい！」という方は以下の公式ドキュメントをどうぞ。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://readouble.com/laravel/5.7/ja/mix.html&quot;&gt;アセットのコンパイル(Mix) 5.7 Laravel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://readouble.com/laravel/5.7/ja/frontend.html&quot;&gt;JavaScriptとCSSスカフォールド 5.7 Laravel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Laravelのプロジェクトフォルダ内に&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack.mix.js&lt;/code&gt;というファイルが存在すると思います。この中に新しく書いた&lt;code class=&quot;highlighter-rouge&quot;&gt;.js&lt;/code&gt;ファイルを登録していきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// webpack.mix.js (はじめから書いてある)&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;mix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/js/app.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;public/js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/sass/app.scss&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;public/css&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;上の処理に続けて、新しく追加したソースコードをビルドするよう、メソッドをチェーンしていきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// webpack.mix.js (新しく作った jQuery, vanilla のソースコードのパスを追加)&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;mix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;js&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/js/app.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/js/assets/test_jquery.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;public/js/app.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;scripts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/js/assets/test_vanilla.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;public/js/test_vanilla.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;resources/sass/app.scss&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;public/css&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;jqueryの場合&quot;&gt;jQueryの場合&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jQuery&lt;/code&gt;のソースコード（&lt;code class=&quot;highlighter-rouge&quot;&gt;test_jquery.js&lt;/code&gt;）は、初めから記述してある&lt;code class=&quot;highlighter-rouge&quot;&gt;mix.js()&lt;/code&gt;の第1引数を配列にして追加します。こうすることで、&lt;code class=&quot;highlighter-rouge&quot;&gt;resources/js/app.js&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;resources/js/app.js&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;public/js/app.js&lt;/code&gt;という1つのファイルにまとめる（ビルド）ことができます。&lt;/p&gt;
+
+&lt;h4 id=&quot;javascriptvanillajsの場合&quot;&gt;javascript(vanilla.js)の場合&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;javascript&lt;/code&gt;(&lt;code class=&quot;highlighter-rouge&quot;&gt;vanilla.js&lt;/code&gt;)のソースコード（&lt;code class=&quot;highlighter-rouge&quot;&gt;test_vanilla.js&lt;/code&gt;）は、新しく追加した&lt;code class=&quot;highlighter-rouge&quot;&gt;mix.scripts()&lt;/code&gt;メソッドで登録しましょう。&lt;/p&gt;
+
+&lt;p&gt;今回は使いませんが、&lt;code class=&quot;highlighter-rouge&quot;&gt;mix.scripts()&lt;/code&gt;と類似したメソッドとして&lt;code class=&quot;highlighter-rouge&quot;&gt;mix.babel()&lt;/code&gt;が用意されています。これは、&lt;code class=&quot;highlighter-rouge&quot;&gt;ES6&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;ECMAScript7&lt;/code&gt;などの新しい規格を基に書かれた&lt;code class=&quot;highlighter-rouge&quot;&gt;.js&lt;/code&gt;コードを、一般的なブラウザが理解できる&lt;code class=&quot;highlighter-rouge&quot;&gt;ES2015(ES6)&lt;/code&gt;の形式に変換（トランスパイル – transpile とか言うらしい）してくれるメソッドらしいです。便利やん…。&lt;/p&gt;
+
+&lt;h3 id=&quot;npm-run-devでソースをコンパイルする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run dev&lt;/code&gt;でソースをコンパイルする&lt;/h3&gt;
+
+&lt;p&gt;次に、コンソールを開きます。いつも&lt;code class=&quot;highlighter-rouge&quot;&gt;php artisan ~&lt;/code&gt;コマンドを実行しているコンソールで結構です。&lt;/p&gt;
+
+&lt;p&gt;コンソールが開けたら以下のコマンドを実行してください。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実行するとコンパイルが開始されますので、しばらく待ちましょう。
+終了すると、&lt;code class=&quot;highlighter-rouge&quot;&gt;public/js&lt;/code&gt;フォルダ内に新しく&lt;code class=&quot;highlighter-rouge&quot;&gt;test_vanilla.js&lt;/code&gt;ができているはずです。&lt;code class=&quot;highlighter-rouge&quot;&gt;app.js&lt;/code&gt;の最後行付近にも先ほど記述した&lt;code class=&quot;highlighter-rouge&quot;&gt;test_jquery.js&lt;/code&gt;のコードが追加されていると思います。&lt;/p&gt;
+
+&lt;p&gt;おめでとうございます！あとはviewの中からこのファイルを読み込んでやるだけです。&lt;/p&gt;
+
+&lt;p&gt;ちなみに、&lt;code class=&quot;highlighter-rouge&quot;&gt;watch&lt;/code&gt;コマンドを利用することで、ファイルの内容が変更されたことを検知し、自動的に再コンパイルを行うことができます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run watch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;特定の環境下では&lt;code class=&quot;highlighter-rouge&quot;&gt;watch&lt;/code&gt;コマンドを利用していても再コンパイルが行われないことがあります。そういうときは&lt;code class=&quot;highlighter-rouge&quot;&gt;watch-poll&lt;/code&gt;コマンドを利用しましょう。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run watch-poll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;view内でassetを読み込む&quot;&gt;view内でassetを読み込む&lt;/h3&gt;
+
+&lt;p&gt;最後に、viewの中で先ほどコンパイルしたassetを読み込みましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Laravel 5.7&lt;/code&gt;にデフォルトで存在する&lt;code class=&quot;highlighter-rouge&quot;&gt;app.blade.php&lt;/code&gt;を利用している場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;app.js&lt;/code&gt;は初めから読み込まれているため、&lt;code class=&quot;highlighter-rouge&quot;&gt;test_vanilla.js&lt;/code&gt;のみを読み込んでやります。&lt;/p&gt;
+
+&lt;p&gt;今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;app.blade.php&lt;/code&gt;ではなく、以下のような&lt;code class=&quot;highlighter-rouge&quot;&gt;blade&lt;/code&gt;テンプレートを使って説明していきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- test.blade.php --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ str_replace('_', '-', app()-&amp;gt;getLocale()) }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width, initial-scale=1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- CSRF Token --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;csrf-token&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ csrf_token() }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;{{ config('app.name', 'Laravel') }}&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Scripts --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ asset('js/app.js') }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;defer&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Fonts --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dns-prefetch&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;//fonts.gstatic.com&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://fonts.googleapis.com/css?family=Nunito&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text/css&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Styles --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ asset('css/app.css') }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+ 
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;app&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;p-3&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Vanilla.js, jQuery のテスト&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;test_vanilla()&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;test_vanilla&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;test_jquery&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- vanilla.js はここで読み込む--&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ asset('js/test_vanilla.js') }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;app.js&lt;/code&gt;は14行目で、&lt;code class=&quot;highlighter-rouge&quot;&gt;test_vanilla.js&lt;/code&gt;は32行目のbodyタグが終わる直前で読み込んでいます。&lt;code class=&quot;highlighter-rouge&quot;&gt;app.blade.php&lt;/code&gt;などのテンプレートを継承して利用する場合は、子テンプレートからscriptタグを挿入できるように工夫するとよいでしょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;routeを通してjsが動作するか試してみる&quot;&gt;routeを通して、jsが動作するか試してみる&lt;/h2&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# web.php&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;Route&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'test'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'test'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通したrouteにアクセスしてみましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/alert_button.jpg&quot; alt=&quot;alert_button&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;こんな風にbuttonが2つ並んで表示されると思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/vanilla_alert.jpg&quot; alt=&quot;vanilla_alert&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;左のボタンを押すと『Hello Vanilla Javascript!!』と表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/jquery_alert.jpg&quot; alt=&quot;jquery_alert&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;右のボタンを押すと『Hello jQuery!!』と表示されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+
+&lt;p&gt;私自身、Laravelでjavascriptを動作させようとしたとき、無駄に手こずったのでこの記事を残しましたが、参考になりましたでしょうか。質問やご意見等ございましたら、コメントいただければ幸いです。&lt;/p&gt;
+
+&lt;p&gt;皆様の開発のお力になれていれば幸いです。ここまで読んでいただき、ありがとうございました。&lt;/p&gt;
+
+&lt;h3 id=&quot;参考にしたサイト様主にqiita記事&quot;&gt;参考にしたサイト様（主にQiita記事）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qiita.com/96kuroguro/items/aad383a129c3523f2ea1&quot;&gt;laravel5.6でjQueryを使おうとすると、Uncaught ReferenceError: $ is not definedが出る時の対処方法 - Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qiita.com/masash49/items/fb64805fcebd68f3b19f&quot;&gt;webpack.mix.js って何？追記：2017/11/17日 – Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qiita.com/sakuraya/items/411dbc2e1e633928340e&quot;&gt;Laravelのアセットに関するTips – Qiita&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>murao</name></author><category term="PHP" /><category term="Laravel" /><summary type="html">LaravelでjQueryの関数を呼び出そうとしたとき、どこにコードを書いてどう呼び出せば良いのか分からなかったので、備忘録として記事を書いておこうと思います。</summary></entry><entry><title type="html">numpy.savetxtだと型情報まで保存してくれなかった話</title><link href="http://localhost:4000/2018/09/30/numpy-savetxt.html" rel="alternate" type="text/html" title="numpy.savetxtだと型情報まで保存してくれなかった話" /><published>2018-09-30T23:29:54+09:00</published><updated>2018-09-30T23:29:54+09:00</updated><id>http://localhost:4000/2018/09/30/numpy-savetxt</id><content type="html" xml:base="http://localhost:4000/2018/09/30/numpy-savetxt.html">&lt;p&gt;numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。&lt;/p&gt;
+
+&lt;p&gt;機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppの&lt;code class=&quot;highlighter-rouge&quot;&gt;savetxt&lt;/code&gt;メソッドを使ってデータを保存することにしました。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;numpy配列と生成と各種処理が終わった後&quot;&gt;numpy配列と生成と各種処理が終わった後&lt;/h2&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nparray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; dtype('int8')
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;savetxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nparray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ご覧の通り、保存前は配列に格納されている値の型は numpy.dtype(‘int8’) であることが分かります。&lt;/p&gt;
+
+&lt;p&gt;しかし、保存したcsvを&lt;code class=&quot;highlighter-rouge&quot;&gt;numpy.loadtxt&lt;/code&gt;メソッドで普通に読み込んだだけだと&lt;code class=&quot;highlighter-rouge&quot;&gt;numpy.dtype('float64')&lt;/code&gt;として解釈され、データを正確に読み込むことができませんでした。&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;load_nparray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadtxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load_nparray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; dtype('float64')
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;そのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;loadtxt&lt;/code&gt;メソッドのキーワード引数&lt;code class=&quot;highlighter-rouge&quot;&gt;dtype&lt;/code&gt;に元の型を明示的に指定してやることが必要となる（今回の場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;dtype='int8'&lt;/code&gt;）。&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;load_nparray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadtxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'int8'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load_nparray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; dtype('int8')
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;型を指定してあげると正確に読み込むことができましたね。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;csvでの保存だと自分の型情報を忘れちゃうようなうっかりさんだとは思っていなかったため、一瞬沼にハマりかけました。なんとか保存したときの型を保持してくれる方法がないか模索中です…&lt;/p&gt;</content><author><name>murao</name></author><category term="Python" /><category term="NumPy" /><summary type="html">numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。 機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppのsavetxtメソッドを使ってデータを保存することにしました。</summary></entry><entry><title type="html">ブログはエンジニアの身分証</title><link href="http://localhost:4000/2018/07/04/first-post.html" rel="alternate" type="text/html" title="ブログはエンジニアの身分証" /><published>2018-07-04T23:29:54+09:00</published><updated>2018-07-04T23:29:54+09:00</updated><id>http://localhost:4000/2018/07/04/first-post</id><content type="html" xml:base="http://localhost:4000/2018/07/04/first-post.html">&lt;p&gt;どうもはじめまして。私は情報系学科に通う大学4年の男です。&lt;/p&gt;
+
+&lt;p&gt;本ブログは、ITエンジニア志望の私が普段勉強したことや興味のあることについて、とりとめもなく綴っていくブログでございます。&lt;/p&gt;
+
+&lt;p&gt;初エントリーとなる今回は、私がなぜブログを始めようと思ったかという自分語りをしていこうと思います。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;なぜブログを始めたのか&quot;&gt;なぜブログを始めたのか？&lt;/h2&gt;
+
+&lt;p&gt;結論から先に述べてしまえば、ブログは「エンジニアの身分証」となるからです。&lt;/p&gt;
+
+&lt;p&gt;どういうニュアンスで「身分証」なのか、というと…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;技術力の高さ（あるいは低さ）&lt;/li&gt;
+  &lt;li&gt;新しい技術へアンテナを張っているか&lt;/li&gt;
+  &lt;li&gt;スキルの方向性（web、スマホアプリ、機械学習等々）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;を見ている人にアピールすることができます。これらは私という人間を知ってもらうツールとして十二分に機能してくれるはずです。&lt;/p&gt;
+
+&lt;p&gt;上記以外のブログを書くことの意味やメリットとしては…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;勉強した内容を残しておける&lt;/li&gt;
+  &lt;li&gt;他のエンジニアの役に立てる&lt;/li&gt;
+  &lt;li&gt;ライティングスキルの向上&lt;/li&gt;
+  &lt;li&gt;アフィで小銭を稼げる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;なんかがあります。特に、勉強した内容を残すことは重要で、いくら頑張って勉強しても忘れるときは忘れるものです。そのとき、また０から勉強し直すのと、自分なりにまとめた文章を読み返すのでは効率が天と地ほどの差があります。&lt;/p&gt;
+
+&lt;p&gt;また、人に伝えることを前提に文章を書くには、より正確に物事を理解していなければならず、より深いレベルでの学習に繋がります。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;ざっと上げてもこんな感じの理由があるので、これから頑張って書いていこうと思います。本ブログが本当に私の身分証として機能していくかどうか、読者の方に見届けていただければ幸いです。&lt;/p&gt;</content><author><name>murao</name></author><category term="Blog" /><summary type="html">どうもはじめまして。私は情報系学科に通う大学4年の男です。 本ブログは、ITエンジニア志望の私が普段勉強したことや興味のあることについて、とりとめもなく綴っていくブログでございます。 初エントリーとなる今回は、私がなぜブログを始めようと思ったかという自分語りをしていこうと思います。</summary></entry></feed>

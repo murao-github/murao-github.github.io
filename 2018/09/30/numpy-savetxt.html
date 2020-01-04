@@ -1,11 +1,10 @@
 <!DOCTYPE html><html lang="jp">
   <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Home - kemonomichi.tech</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>numpy.savetxtだと型情報まで保存してくれなかった話 - kemonomichi.tech</title>
 
-<meta name="description" content="舗装の予定はございません
-">
-<link rel="canonical" href="http://localhost:4000/"><link rel="alternate" type="application/rss+xml" title="kemonomichi.tech" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
+<meta name="description" content="numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppのsavetxtメソッドを使ってデータを保存することにしました。">
+<link rel="canonical" href="http://localhost:4000/2018/09/30/numpy-savetxt.html"><link rel="alternate" type="application/rss+xml" title="kemonomichi.tech" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
 
 <meta name="msapplication-TileColor" content="#ffc40d"><meta name="msapplication-config" content="/assets/browserconfig.xml">
 
@@ -253,7 +252,7 @@
 </script></head>
   <body>
     <div class="root" data-is-touch="false">
-      <div class="layout--page js-page-root"><div class="page__main js-page-main page__viewport cell cell--auto">
+      <div class="layout--page js-page-root"><div class="page__main js-page-main page__viewport has-aside cell cell--auto">
 
       <div class="page__main-inner"><div class="page__header d-print-none"><header class="header"><div class="main">
       <div class="header__title">
@@ -271,37 +270,15 @@
   </header>
 </div><div class="page__content"><div class ="main"><div class="grid grid--reverse">
 
-              <div class="col-aside d-print-none js-col-aside"></div>
+              <div class="col-aside d-print-none js-col-aside"><aside class="page__aside js-page-aside"><div class="toc-aside js-toc-root"></div></aside></div>
 
               <div class="col-main cell cell--auto"><!-- start custom main top snippet -->
 
-<!-- end custom main top snippet --><article itemscope itemtype="http://schema.org/WebPage"><header style="display:none;"><h1>Home</h1></header><meta itemprop="headline" content="Home"><meta itemprop="author" content="murao"/><div class="js-article-content"><div class="layout--articles"><div class="article-list items items--divided"><article class="item" itemscope itemtype="http://schema.org/BlogPosting"><div class="item__content">
-          <header><a href="/2019/02/13/use-numpy-view.html"><h2 itemprop="headline" class="item__header">numpy配列を相対参照できるnumpy.viewを賢く使おう</h2></a></header>
-          <div class="item__description"><div class="article__content" itemprop="description articleBody">今回はnumpy配列の値を相対参照により書き換える方法をご説明していきたいと思います。</div><p><a href="/2019/02/13/use-numpy-view.html">続きを読む</a></p></div><div class="article__info clearfix"><ul class="left-col menu"><li>
-              <a class="button button--secondary button--pill button--sm"
-                href="/archive.html?tag=Python">Python</a>
-            </li><li>
-              <a class="button button--secondary button--pill button--sm"
-                href="/archive.html?tag=NumPy">NumPy</a>
-            </li></ul><ul class="right-col menu"><li><i class="far fa-calendar-alt"></i> <span>2019 02 13</span>
-            </li></ul></div><meta itemprop="author" content="murao"/><meta itemprop="datePublished" content="2019-02-13T23:29:54+09:00">
-    <meta itemprop="keywords" content="Python,NumPy"></div>
-      </article><article class="item" itemscope itemtype="http://schema.org/BlogPosting"><div class="item__content">
-          <header><a href="/2019/01/24/where_will_js_be_placed.html"><h2 itemprop="headline" class="item__header">javascript(jquery)を書く場所とLaravelMixの使い方についての備忘録</h2></a></header>
-          <div class="item__description"><div class="article__content" itemprop="description articleBody">LaravelでjQueryの関数を呼び出そうとしたとき、どこにコードを書いてどう呼び出せば良いのか分からなかったので、備忘録として記事を書いておこうと思います。</div><p><a href="/2019/01/24/where_will_js_be_placed.html">続きを読む</a></p></div><div class="article__info clearfix"><ul class="left-col menu"><li>
-              <a class="button button--secondary button--pill button--sm"
-                href="/archive.html?tag=PHP">PHP</a>
-            </li><li>
-              <a class="button button--secondary button--pill button--sm"
-                href="/archive.html?tag=Laravel">Laravel</a>
-            </li></ul><ul class="right-col menu"><li><i class="far fa-calendar-alt"></i> <span>2019 01 24</span>
-            </li></ul></div><meta itemprop="author" content="murao"/><meta itemprop="datePublished" content="2019-01-24T00:00:00+09:00">
-    <meta itemprop="keywords" content="PHP,Laravel"></div>
-      </article><article class="item" itemscope itemtype="http://schema.org/BlogPosting"><div class="item__content">
-          <header><a href="/2018/09/30/numpy-savetxt.html"><h2 itemprop="headline" class="item__header">numpy.savetxtだと型情報まで保存してくれなかった話</h2></a></header>
-          <div class="item__description"><div class="article__content" itemprop="description articleBody">numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。
-
-機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppのsavetxtメソッドを使ってデータを保存することにしました。</div><p><a href="/2018/09/30/numpy-savetxt.html">続きを読む</a></p></div><div class="article__info clearfix"><ul class="left-col menu"><li>
+<!-- end custom main top snippet --><article itemscope itemtype="http://schema.org/Article"><div class="article__header"><header><h1>numpy.savetxtだと型情報まで保存してくれなかった話</h1></header><span class="split-space">&nbsp;</span>
+          <a class="edit-on-github"
+            title="Edit on Github"
+            href="https://github.com/user_name/repo_name/tree/master/_posts/2018-09-30-numpy-savetxt.md">
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="numpy.savetxtだと型情報まで保存してくれなかった話"><div class="article__info clearfix"><ul class="left-col menu"><li>
               <a class="button button--secondary button--pill button--sm"
                 href="/archive.html?tag=Python">Python</a>
             </li><li>
@@ -309,28 +286,79 @@
                 href="/archive.html?tag=NumPy">NumPy</a>
             </li></ul><ul class="right-col menu"><li><i class="far fa-calendar-alt"></i> <span>2018 09 30</span>
             </li></ul></div><meta itemprop="author" content="murao"/><meta itemprop="datePublished" content="2018-09-30T23:29:54+09:00">
-    <meta itemprop="keywords" content="Python,NumPy"></div>
-      </article><article class="item" itemscope itemtype="http://schema.org/BlogPosting"><div class="item__content">
-          <header><a href="/2018/07/04/first-post.html"><h2 itemprop="headline" class="item__header">ブログはエンジニアの身分証</h2></a></header>
-          <div class="item__description"><div class="article__content" itemprop="description articleBody">どうもはじめまして。私は情報系学科に通う大学4年の男です。
+    <meta itemprop="keywords" content="Python,NumPy"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
-本ブログは、ITエンジニア志望の私が普段勉強したことや興味のあることについて、とりとめもなく綴っていくブログでございます。
+<!-- end custom article top snippet --><div class="article__content" itemprop="articleBody"><p>numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。</p>
 
-初エントリーとなる今回は、私がなぜブログを始めようと思ったかという自分語りをしていこうと思います。</div><p><a href="/2018/07/04/first-post.html">続きを読む</a></p></div><div class="article__info clearfix"><ul class="left-col menu"><li>
-              <a class="button button--secondary button--pill button--sm"
-                href="/archive.html?tag=Blog">Blog</a>
-            </li></ul><ul class="right-col menu"><li><i class="far fa-calendar-alt"></i> <span>2018 07 04</span>
-            </li></ul></div><meta itemprop="author" content="murao"/><meta itemprop="datePublished" content="2018-07-04T23:29:54+09:00">
-    <meta itemprop="keywords" content="Blog"></div>
-      </article></div>
-</div><div class="layout--home"></div>
-<script>/*(function () {
+<p>機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppの<code class="highlighter-rouge">savetxt</code>メソッドを使ってデータを保存することにしました。</p>
 
-})();*/
-</script>
+<!--more-->
 
+<h2 id="numpy配列と生成と各種処理が終わった後">numpy配列と生成と各種処理が終わった後</h2>
 
-</div><section class="page__comments d-print-none"></section></article><!-- start custom main bottom snippet -->
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">nparray</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="c1">#=&gt; dtype('int8')
+</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">nparray</span><span class="p">)</span>
+</code></pre></div></div>
+<p>ご覧の通り、保存前は配列に格納されている値の型は numpy.dtype(‘int8’) であることが分かります。</p>
+
+<p>しかし、保存したcsvを<code class="highlighter-rouge">numpy.loadtxt</code>メソッドで普通に読み込んだだけだと<code class="highlighter-rouge">numpy.dtype('float64')</code>として解釈され、データを正確に読み込むことができませんでした。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">load_nparray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">load_nparray</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="c1">#=&gt; dtype('float64')
+</span></code></pre></div></div>
+<p>そのため、<code class="highlighter-rouge">loadtxt</code>メソッドのキーワード引数<code class="highlighter-rouge">dtype</code>に元の型を明示的に指定してやることが必要となる（今回の場合は <code class="highlighter-rouge">dtype='int8'</code>）。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">load_nparray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">'int8'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">load_nparray</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="c1">#=&gt; dtype('int8')
+</span></code></pre></div></div>
+<p>型を指定してあげると正確に読み込むことができましたね。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>csvでの保存だと自分の型情報を忘れちゃうようなうっかりさんだとは思っていなかったため、一瞬沼にハマりかけました。なんとか保存したときの型を保持してくれる方法がないか模索中です…</p>
+</div><section class="article__sharing d-print-none"></section><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2018-09-30T23:29:54+09:00"><!-- start custom article footer snippet -->
+
+<!-- end custom article footer snippet --><div class="article__subscribe"><div class="subscribe"><i class="fas fa-rss"></i> <a type="application/rss+xml" href="/feed.xml">Subscribe</a></div></div><div class="article__license"><div class="license">
+    <p>This work is licensed under a <a itemprop="license" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Attribution-NonCommercial 4.0 International</a> license.
+      <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">
+        <img alt="Attribution-NonCommercial 4.0 International" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+      </a>
+    </p>
+  </div></div></footer><div class="article__section-navigator clearfix"><div class="previous"><span>PREVIOUS</span><a href="/2018/07/04/first-post.html">ブログはエンジニアの身分証</a></div><div class="next"><span>NEXT</span><a href="/2019/01/24/where_will_js_be_placed.html">javascript(jquery)を書く場所とLaravelMixの使い方についての備忘録</a></div></div></div>
+
+</div>
+
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    $(function() {
+      var $this ,$scroll;
+      var $articleContent = $('.js-article-content');
+      var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+      var scroll = hasSidebar ? '.js-page-main' : 'html, body';
+      $scroll = $(scroll);
+
+      $articleContent.find('.highlight').each(function() {
+        $this = $(this);
+        $this.attr('data-lang', $this.find('code').attr('data-lang'));
+      });
+      $articleContent.find('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').each(function() {
+        $this = $(this);
+        $this.append($('<a class="anchor d-print-none" aria-hidden="true"></a>').html('<i class="fas fa-anchor"></i>'));
+      });
+      $articleContent.on('click', '.anchor', function() {
+        $scroll.scrollToAnchor('#' + $(this).parent().attr('id'), 400);
+      });
+    });
+  });
+})();
+</script></div><section class="page__comments d-print-none"></section></article><!-- start custom main bottom snippet -->
 
 <!-- end custom main bottom snippet --></div>
             </div></div></div><div class="page__footer d-print-none">
@@ -749,6 +777,68 @@
 /*(function () {
 
 })();*/
+</script><script>
+  /* toc must before affix, since affix need to konw toc' height. */(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  var TOC_SELECTOR = window.TEXT_VARIABLES.site.toc.selectors;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window);
+    var $articleContent = $('.js-article-content');
+    var $tocRoot = $('.js-toc-root'), $col2 = $('.js-col-aside');
+    var toc;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+    var hasToc = $articleContent.find(TOC_SELECTOR).length > 0;
+
+    function disabled() {
+      return $col2.css('display') === 'none' || !hasToc;
+    }
+
+    tocDisabled = disabled();
+
+    toc = $tocRoot.toc({
+      selectors: TOC_SELECTOR,
+      container: $articleContent,
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      tocDisabled = disabled();
+      toc && toc.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window), $pageFooter = $('.js-page-footer');
+    var $pageAside = $('.js-page-aside');
+    var affix;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+
+    affix = $pageAside.affix({
+      offsetBottom: $pageFooter.outerHeight(),
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      scroll: hasSidebar ? $('.js-page-main').children() : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      affix && affix.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+    window.pageAsideAffix = affix;
+  });
+})();
 </script>
     </div>
     <script>(function () {
