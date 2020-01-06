@@ -1,5 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="jp"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="jp" /><updated>2020-01-05T04:07:23+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">kemonomichi.tech</title><subtitle>舗装の予定はございません
-</subtitle><author><name>murao</name></author><entry><title type="html">numpy配列を相対参照できるnumpy.viewを賢く使おう</title><link href="http://localhost:4000/2019/02/13/use-numpy-view.html" rel="alternate" type="text/html" title="numpy配列を相対参照できるnumpy.viewを賢く使おう" /><published>2019-02-13T23:29:54+09:00</published><updated>2019-02-13T23:29:54+09:00</updated><id>http://localhost:4000/2019/02/13/use-numpy-view</id><content type="html" xml:base="http://localhost:4000/2019/02/13/use-numpy-view.html">&lt;p&gt;今回はnumpy配列の値を相対参照により書き換える方法をご説明していきたいと思います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="jp"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="jp" /><updated>2020-01-07T01:38:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">kemonomichi.tech</title><subtitle>&quot;獣道&quot;的techブログ
+</subtitle><author><name>murao</name></author><entry><title type="html">ブログをWordPressからJekyll+GitHub Pagesにしました</title><link href="http://localhost:4000/2020/01/07/transfer_from_wordpress_to_jekyll.html" rel="alternate" type="text/html" title="ブログをWordPressからJekyll+GitHub Pagesにしました" /><published>2020-01-07T00:00:00+09:00</published><updated>2020-01-07T00:00:00+09:00</updated><id>http://localhost:4000/2020/01/07/transfer_from_wordpress_to_jekyll</id><content type="html" xml:base="http://localhost:4000/2020/01/07/transfer_from_wordpress_to_jekyll.html">&lt;p&gt;みなさま、お久しぶりです。お元気だったでしょうか。
+約1年ぶりの更新となります。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;この度、当ブログをWordPressでの運用から、JekyllとGitHub Pagesを用いた静的サイトに移管しました。
+理由としては、わざわざサーバを借りて運用するほど大層なブログでもないし、Markdownで手軽にかけたほうがアウトプットの労力が減るなと感じた次第です。&lt;/p&gt;
+
+&lt;p&gt;ブログの更新頻度も、これから少しずつ上げていこうと思っておりますので、生暖かい目で見守ってくださいますと幸いです。
+では。&lt;/p&gt;</content><author><name>murao</name></author><category term="Blog" /><category term="Jekyll" /><summary type="html">みなさま、お久しぶりです。お元気だったでしょうか。 約1年ぶりの更新となります。</summary></entry><entry><title type="html">numpy配列を相対参照できるnumpy.viewを賢く使おう</title><link href="http://localhost:4000/2019/02/13/use-numpy-view.html" rel="alternate" type="text/html" title="numpy配列を相対参照できるnumpy.viewを賢く使おう" /><published>2019-02-13T00:00:00+09:00</published><updated>2019-02-13T00:00:00+09:00</updated><id>http://localhost:4000/2019/02/13/use-numpy-view</id><content type="html" xml:base="http://localhost:4000/2019/02/13/use-numpy-view.html">&lt;p&gt;今回はnumpy配列の値を相対参照により書き換える方法をご説明していきたいと思います。&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -297,15 +306,15 @@
 
 &lt;p&gt;通したrouteにアクセスしてみましょう。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/alert_button.jpg&quot; alt=&quot;alert_button&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/01/alert_button.jpg&quot; alt=&quot;alert_button&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;こんな風にbuttonが2つ並んで表示されると思います。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/vanilla_alert.jpg&quot; alt=&quot;vanilla_alert&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/01/vanilla_alert.jpg&quot; alt=&quot;vanilla_alert&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;左のボタンを押すと『Hello Vanilla Javascript!!』と表示されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/jquery_alert.jpg&quot; alt=&quot;jquery_alert&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/01/jquery_alert.jpg&quot; alt=&quot;jquery_alert&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;右のボタンを押すと『Hello jQuery!!』と表示されます。&lt;/p&gt;
 
@@ -321,7 +330,7 @@
   &lt;li&gt;&lt;a href=&quot;https://qiita.com/96kuroguro/items/aad383a129c3523f2ea1&quot;&gt;laravel5.6でjQueryを使おうとすると、Uncaught ReferenceError: $ is not definedが出る時の対処方法 - Qiita&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://qiita.com/masash49/items/fb64805fcebd68f3b19f&quot;&gt;webpack.mix.js って何？追記：2017/11/17日 – Qiita&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://qiita.com/sakuraya/items/411dbc2e1e633928340e&quot;&gt;Laravelのアセットに関するTips – Qiita&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>murao</name></author><category term="PHP" /><category term="Laravel" /><summary type="html">LaravelでjQueryの関数を呼び出そうとしたとき、どこにコードを書いてどう呼び出せば良いのか分からなかったので、備忘録として記事を書いておこうと思います。</summary></entry><entry><title type="html">numpy.savetxtだと型情報まで保存してくれなかった話</title><link href="http://localhost:4000/2018/09/30/numpy-savetxt.html" rel="alternate" type="text/html" title="numpy.savetxtだと型情報まで保存してくれなかった話" /><published>2018-09-30T23:29:54+09:00</published><updated>2018-09-30T23:29:54+09:00</updated><id>http://localhost:4000/2018/09/30/numpy-savetxt</id><content type="html" xml:base="http://localhost:4000/2018/09/30/numpy-savetxt.html">&lt;p&gt;numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。&lt;/p&gt;
+&lt;/ul&gt;</content><author><name>murao</name></author><category term="PHP" /><category term="Laravel" /><summary type="html">LaravelでjQueryの関数を呼び出そうとしたとき、どこにコードを書いてどう呼び出せば良いのか分からなかったので、備忘録として記事を書いておこうと思います。</summary></entry><entry><title type="html">numpy.savetxtだと型情報まで保存してくれなかった話</title><link href="http://localhost:4000/2018/09/30/numpy-savetxt.html" rel="alternate" type="text/html" title="numpy.savetxtだと型情報まで保存してくれなかった話" /><published>2018-09-30T00:00:00+09:00</published><updated>2018-09-30T00:00:00+09:00</updated><id>http://localhost:4000/2018/09/30/numpy-savetxt</id><content type="html" xml:base="http://localhost:4000/2018/09/30/numpy-savetxt.html">&lt;p&gt;numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。&lt;/p&gt;
 
 &lt;p&gt;機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppの&lt;code class=&quot;highlighter-rouge&quot;&gt;savetxt&lt;/code&gt;メソッドを使ってデータを保存することにしました。&lt;/p&gt;
 
@@ -354,7 +363,7 @@
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 
-&lt;p&gt;csvでの保存だと自分の型情報を忘れちゃうようなうっかりさんだとは思っていなかったため、一瞬沼にハマりかけました。なんとか保存したときの型を保持してくれる方法がないか模索中です…&lt;/p&gt;</content><author><name>murao</name></author><category term="Python" /><category term="NumPy" /><summary type="html">numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。 機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppのsavetxtメソッドを使ってデータを保存することにしました。</summary></entry><entry><title type="html">ブログはエンジニアの身分証</title><link href="http://localhost:4000/2018/07/04/first-post.html" rel="alternate" type="text/html" title="ブログはエンジニアの身分証" /><published>2018-07-04T23:29:54+09:00</published><updated>2018-07-04T23:29:54+09:00</updated><id>http://localhost:4000/2018/07/04/first-post</id><content type="html" xml:base="http://localhost:4000/2018/07/04/first-post.html">&lt;p&gt;どうもはじめまして。私は情報系学科に通う大学4年の男です。&lt;/p&gt;
+&lt;p&gt;csvでの保存だと自分の型情報を忘れちゃうようなうっかりさんだとは思っていなかったため、一瞬沼にハマりかけました。なんとか保存したときの型を保持してくれる方法がないか模索中です…&lt;/p&gt;</content><author><name>murao</name></author><category term="Python" /><category term="NumPy" /><summary type="html">numpy配列をcsvで保存するときに仕様にハマりかけたのでメモ。 機械学習のデータセットを作っていて、クラス分類用のラベル（整数型）が格納されたnumpy配列が必要になりました。そこで、numppのsavetxtメソッドを使ってデータを保存することにしました。</summary></entry><entry><title type="html">ブログはエンジニアの身分証</title><link href="http://localhost:4000/2018/07/04/first-post.html" rel="alternate" type="text/html" title="ブログはエンジニアの身分証" /><published>2018-07-04T00:00:00+09:00</published><updated>2018-07-04T00:00:00+09:00</updated><id>http://localhost:4000/2018/07/04/first-post</id><content type="html" xml:base="http://localhost:4000/2018/07/04/first-post.html">&lt;p&gt;どうもはじめまして。私は情報系学科に通う大学4年の男です。&lt;/p&gt;
 
 &lt;p&gt;本ブログは、ITエンジニア志望の私が普段勉強したことや興味のあることについて、とりとめもなく綴っていくブログでございます。&lt;/p&gt;
 
